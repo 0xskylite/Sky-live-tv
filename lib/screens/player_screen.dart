@@ -138,11 +138,39 @@ class _PlayerScreenState extends State<PlayerScreen> {
       ),
       body: Column(
         children: [
-          AspectRatio(
-            aspectRatio: 16 / 9,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
             child: Container(
-              color: Colors.black,
-              child: _playerArea(),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.09)),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.sky.withValues(alpha: 0.08),
+                    blurRadius: 24,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Container(
+                  color: Colors.black,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(child: _playerArea()),
+                      if (_error == null)
+                        const Positioned(
+                          top: 10,
+                          right: 10,
+                          child: LiveBadge(),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
           Expanded(

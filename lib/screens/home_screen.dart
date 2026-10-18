@@ -8,6 +8,7 @@ import '../theme/category_style.dart';
 import '../widgets/channel_card.dart';
 import '../widgets/featured_carousel.dart';
 import '../widgets/parental_gate.dart';
+import 'category_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _tab = 0;
   String _query = '';
+  String? _selectedCat;
   final _searchCtrl = TextEditingController();
 
   @override
@@ -85,12 +87,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(child: _header(store)),
-        if (searching)
+        SliverToBoxAdapter(child: _categoryChips(store)),
+        if (searching) ...[
+          SliverToBoxAdapter(child: _searchMeta(store)),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
             sliver: _gridSliver(context, store.search(_query)),
-          )
-        else if (store.channels.isEmpty)
+          ),
+        ] else if (_selectedCat != null) ...[
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+            sliver: _gridSliver(context, store.byCategory(_selectedCat!)),
+          ),
+        ] else if (store.channels.isEmpty)
           SliverToBoxAdapter(child: _kidsEmptyState())
         else ...[
           const SliverToBoxAdapter(child: SizedBox(height: 4)),
@@ -123,6 +132,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _sectionHeader(
                 '${CategoryStyle.emojiFor(cat)} $cat',
                 store.byCategory(cat).length,
+                onSeeAll: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => CategoryScreen(category: cat)),
+                ),
               ),
             ),
             SliverToBoxAdapter(
@@ -302,8 +316,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           const SizedBox(height: 24),
-          const Text('আজ কী দেখবে?',
-              style: TextStyle(
+          Text(_greeting(),
+              style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 25,
                 fontWeight: FontWeight.w800,
@@ -357,6 +371,91 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Time-aware Bengali greeting for the home header.
+  String _greeting() {
+    final h = DateTime.now().hour;
+    if (h < 4) return 'শুভ রাত্রি 🌙';
+    if (h < 12) return 'শুভ সকাল ☀️';
+    if (h < 16) return 'শুভ দুপুর 🌤️';
+    if (h < 19) return 'শুভ বিকাল 🌇';
+    return 'শুভ সন্ধ্যা 🌃';
+  }
+
+  /// Horizontal category filter chips under the search bar.
+  Widget _categoryChips(ChannelStore store) {
+    final cats = store.categories;
+    return SizedBox(
+      height: 46,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(16, 2, 16, 10),
+        itemCount: cats.length + 1,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (_, i) {
+          final cat = i == 0 ? null : cats[i - 1];
+          final selected = _selectedCat == cat;
+          final label =
+              cat == null ? '✨ সব' : '${CategoryStyle.emojiFor(cat)} $cat';
+          return GestureDetector(
+            onTap: () => setState(() => _selectedCat = cat),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                gradient: selected ? AppColors.headerGradient : null,
+                color: selected ? null : AppColors.surface2,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(
+                  color: selected
+                      ? Colors.transparent
+                      : Colors.white.withValues(alpha: 0.06),
+                ),
+                boxShadow: selected
+                    ? [
+                        BoxShadow(
+                          color: AppColors.sky.withValues(alpha: 0.25),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Center(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                    color: selected
+                        ? Colors.white
+                        : AppColors.textSecondary,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  /// "Nটি চ্যানেল পাওয়া গেছে" line above search results.
+  Widget _searchMeta(ChannelStore store) {
+    final n = store.search(_query).length;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 2, 18, 10),
+      child: Text(
+        n == 0 ? 'কিছু পাওয়া যায়নি' : '$nটি চ্যানেল পাওয়া গেছে',
+        style: const TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
   Future<void> _toggleKidsMode(ChannelStore store) async {
     if (store.kidsOnly) {
       final ok = await showDialog<bool>(
@@ -381,7 +480,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _sectionHeader(String title, int count,
-      {VoidCallback? onClear, String? clearLabel}) {
+      {VoidCallback? onClear, String? clearLabel, VoidCallback? onSeeAll}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       child: Row(
@@ -411,6 +510,33 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const Spacer(),
+          if (onSeeAll != null)
+            TextButton(
+              onPressed: onSeeAll,
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'সব দেখো',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.sky,
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    size: 16,
+                    color: AppColors.sky,
+                  ),
+                ],
+              ),
+            ),
           if (onClear != null)
             TextButton(
               onPressed: onClear,

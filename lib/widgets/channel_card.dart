@@ -9,15 +9,27 @@ import 'live_badge.dart';
 
 /// Channel card: rounded dark card, logo art (or a per-category
 /// gradient + emoji fallback), LIVE badge and favorite button overlaid.
+/// Press-and-hold shrinks the card slightly for tactile feedback.
 /// Sizes itself to the parent — wrap in a SizedBox for fixed width.
-class ChannelCard extends StatelessWidget {
+class ChannelCard extends StatefulWidget {
   final Channel channel;
 
   const ChannelCard({super.key, required this.channel});
 
   @override
+  State<ChannelCard> createState() => _ChannelCardState();
+}
+
+class _ChannelCardState extends State<ChannelCard> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
+    final channel = widget.channel;
     return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
       onTap: () {
         context.read<ChannelStore>().addRecent(channel);
         Navigator.push(
@@ -25,57 +37,73 @@ class ChannelCard extends StatelessWidget {
           MaterialPageRoute(builder: (_) => PlayerScreen(channel: channel)),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
+      child: AnimatedScale(
+        scale: _pressed ? 0.94 : 1.0,
+        duration: const Duration(milliseconds: 130),
+        curve: Curves.easeOut,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+            boxShadow: _pressed
+                ? null
+                : [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.25),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
                     ),
-                    child: SizedBox.expand(child: _logo()),
-                  ),
-                  const Positioned(
-                    top: 8,
-                    left: 8,
-                    child: LiveBadge(),
-                  ),
-                  Positioned(
-                    top: 4,
-                    right: 4,
-                    child: _FavButton(channel: channel),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-              child: Text(
-                channel.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                  color: AppColors.textPrimary,
+                  ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(16),
+                      ),
+                      child: SizedBox.expand(child: _logo()),
+                    ),
+                    const Positioned(
+                      top: 8,
+                      left: 8,
+                      child: LiveBadge(),
+                    ),
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: _FavButton(channel: channel),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                child: Text(
+                  channel.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _logo() {
+    final channel = widget.channel;
     if (channel.logoUrl.isEmpty) return _fallback();
     return Container(
       color: AppColors.surface,
@@ -101,6 +129,7 @@ class ChannelCard extends StatelessWidget {
   }
 
   Widget _fallback() {
+    final channel = widget.channel;
     final gradient = CategoryStyle.gradientFor(channel.category);
     return Container(
       decoration: BoxDecoration(
