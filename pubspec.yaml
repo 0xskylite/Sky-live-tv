@@ -1,0 +1,40 @@
+name: skylivetv
+description: Sky Live TV — kids-first streaming entertainment app (own content sources).
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.0
+  video_player: ^2.8.0
+  chewie: ^1.7.0
+  cupertino_icons: ^1.0.8
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.2
+
+flutter:
+  uses-material-design: true
+
+# Generated in CI: `dart run flutter_launcher_icons`
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/app_icon.png"
+  adaptive_icon_background: "#080D18"
+
+# Generated in CI: `dart run flutter_native_splash:create`
+flutter_native_splash:
+  color: "#080D18"
+  image: assets/icon/app_icon.png
+  android: true
+  ios: false
