@@ -22,6 +22,10 @@ class CategoryStyle {
     'MUSIC': '🎵',
     'ENTERTAINMENT': '🎪',
     'IMPORTED': '📥',
+    'INDIAN NEWS': '📰',
+    'TAMIL': '🎭',
+    'TELUGU': '🎭',
+    'MARATHI': '🎭',
     'অন্যান্য': '📺',
   };
 
