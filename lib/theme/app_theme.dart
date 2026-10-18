@@ -37,25 +37,25 @@ ThemeData buildAppTheme() {
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: AppColors.navSurface,
-      indicatorColor: AppColors.sky.withOpacity(0.16),
-      labelTextStyle: MaterialStateProperty.resolveWith((states) => TextStyle(
-        color: states.contains(MaterialState.selected)
+      indicatorColor: AppColors.sky.withValues(alpha: 41),
+      labelTextStyle: WidgetStateProperty.resolveWith((states) => TextStyle(
+        color: states.contains(WidgetState.selected)
             ? AppColors.sky
             : AppColors.textSecondary,
         fontSize: 11,
-        fontWeight: states.contains(MaterialState.selected)
+        fontWeight: states.contains(WidgetState.selected)
             ? FontWeight.w700
             : FontWeight.w500,
       )),
-      iconTheme: MaterialStateProperty.resolveWith((states) => IconThemeData(
-        color: states.contains(MaterialState.selected)
+      iconTheme: WidgetStateProperty.resolveWith((states) => IconThemeData(
+        color: states.contains(WidgetState.selected)
             ? AppColors.sky
             : AppColors.textSecondary,
         size: 23,
       )),
       elevation: 16,
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: AppColors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),

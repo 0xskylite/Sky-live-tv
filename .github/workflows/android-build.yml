@@ -32,6 +32,32 @@ jobs:
       - name: Generate Android platform files if missing
         run: flutter create --platforms=android --org com.skylivetv --project-name skylivetv .
 
+      - name: Ensure widget test matches the app entrypoint
+        # flutter create scaffolds test/widget_test.dart referencing MyApp;
+        # our app entrypoint is SkyLiveTvApp. Overwrite it deterministically.
+        run: |
+          mkdir -p test
+          cat > test/widget_test.dart <<'DART'
+          import 'package:flutter_test/flutter_test.dart';
+          import 'package:shared_preferences/shared_preferences.dart';
+          import 'package:skylivetv/main.dart';
+
+          void main() {
+            TestWidgetsFlutterBinding.ensureInitialized();
+
+            setUp(() {
+              SharedPreferences.setMockInitialValues(<String, Object>{});
+            });
+
+            testWidgets('app launches and shows home header',
+                (WidgetTester tester) async {
+              await tester.pumpWidget(const SkyLiveTvApp());
+              await tester.pump();
+              expect(find.text('SKY LIVE TV'), findsOneWidget);
+            });
+          }
+          DART
+
       - name: Configure Android network access for streams
         run: |
           python3 - <<'PY'

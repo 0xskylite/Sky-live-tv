@@ -29,7 +29,7 @@ class ChannelCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.07)),
+          border: Border.all(color: Colors.white.withValues(alpha: 18)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

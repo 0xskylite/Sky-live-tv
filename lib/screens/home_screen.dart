@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedIndex: _tab,
         onDestinationSelected: (i) => setState(() => _tab = i),
         backgroundColor: AppColors.navSurface,
-        indicatorColor: AppColors.sky.withOpacity(0.16),
+        indicatorColor: AppColors.sky.withValues(alpha: 41),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         destinations: const [
           NavigationDestination(
@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.sky.withOpacity(0.22),
+                      color: AppColors.sky.withValues(alpha: 56),
                       blurRadius: 22,
                       offset: const Offset(0, 7),
                     ),
@@ -240,13 +240,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                   decoration: BoxDecoration(
                     color: kidsOn
-                        ? AppColors.sky.withOpacity(0.18)
+                        ? AppColors.sky.withValues(alpha: 46)
                         : AppColors.surface2,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: kidsOn
-                          ? AppColors.sky.withOpacity(0.5)
-                          : Colors.white.withOpacity(0.06),
+                          ? AppColors.sky.withValues(alpha: 128)
+                          : Colors.white.withValues(alpha: 15),
                     ),
                   ),
                   child: Row(
@@ -283,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   color: AppColors.surface2,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withOpacity(0.06)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 15)),
                 ),
                 child: const Row(
                     mainAxisSize: MainAxisSize.min,
@@ -337,12 +337,12 @@ class _HomeScreenState extends State<HomeScreen> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
                 borderSide:
-                    BorderSide(color: Colors.white.withOpacity(0.04)),
+                    BorderSide(color: Colors.white.withValues(alpha: 10)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
                 borderSide:
-                    BorderSide(color: Colors.white.withOpacity(0.06)),
+                    BorderSide(color: Colors.white.withValues(alpha: 15)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),

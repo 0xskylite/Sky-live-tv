@@ -40,7 +40,7 @@ class _LiveBadgeState extends State<LiveBadge>
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
-              color: AppColors.live.withOpacity(0.25 + 0.4 * _ctrl.value),
+              color: AppColors.live.withValues(alpha: ((0.25 + 0.4 * _ctrl.value) * 255).round()),
               blurRadius: 5 + 9 * _ctrl.value,
               spreadRadius: _ctrl.value * 1.5,
             ),
@@ -53,7 +53,7 @@ class _LiveBadgeState extends State<LiveBadge>
               width: 6,
               height: 6,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.65 + 0.35 * _ctrl.value),
+                color: Colors.white.withValues(alpha: ((0.65 + 0.35 * _ctrl.value) * 255).round()),
                 shape: BoxShape.circle,
               ),
             ),
