@@ -152,7 +152,7 @@ final List<Channel> playlistChannels = [
   Channel(id: 'p72', name: 'Colors Bangla Cinema', category: 'INDIAN BANGLA',
       logoUrl: 'https://jiotv.catchup.cdn.jio.com/dare_images/images/Colors_Bangla_Cinema.png', streamUrl: 'https://jioplaylistdown.yecic62314.workers.dev/live.m3u8?id=1657', isKids: false),
   Channel(id: 'p73', name: 'Zee Bangla HD', category: 'INDIAN BANGLA',
-      logoUrl: 'https://assets-prod.services.toffeelive.com/f_png,w_300,q_85/kK2aX5UBrjBfS2_RBcKf/posters/ba5dd8dc-4f87-414a-b57f-c9ecdeda5253.png', streamUrl: 'http://flowutc.com/live/MAGTF8AV71/bUiJLEJKG5/78981.ts', isKids: false),
+      logoUrl: 'https://assets-prod.services.toffeelive.com/f_png,w_300,q_85/kK2aX5UBrjBfS2_RBcKf/posters/ba5dd8dc-4f87-414a-b57f-c9ecdeda5253.png', streamUrl: 'http://103.151.60.162:2122/play/a011/index.m3u8?hls', isKids: false),
   Channel(id: 'p74', name: 'Colors Bangla', category: 'INDIAN BANGLA',
       logoUrl: 'https://i.postimg.cc/3w6F5VZ5/20240822-231514.png', streamUrl: 'http://flowutc.com/live/MAGTF8AV71/bUiJLEJKG5/76179.ts', isKids: false),
   Channel(id: 'p75', name: 'Sun Bangla', category: 'INDIAN BANGLA',
