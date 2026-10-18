@@ -8,6 +8,8 @@ import '../theme/app_theme.dart';
 import '../theme/category_style.dart';
 import '../widgets/channel_card.dart';
 import '../widgets/live_badge.dart';
+import '../widgets/sky_watermark.dart';
+import '../services/vpn_helper.dart';
 
 /// Video player for HLS (.m3u8) and mp4 streams, with a channel
 /// info card and related channels below the video.
@@ -25,6 +27,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
   ChewieController? _chewieController;
   String? _error;
   bool _loading = true;
+  // True when the failure happened while loading the stream itself
+  // (as opposed to a missing/bad link) — a VPN might help there.
+  bool _vpnMayHelp = false;
 
   @override
   void initState() {
@@ -53,6 +58,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
     }
     _error = null;
     _loading = true;
+    _vpnMayHelp = false;
     _videoController = VideoPlayerController.networkUrl(uri);
     _videoController!
         .initialize()
@@ -78,6 +84,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
           setState(() {
             _error = 'স্ট্রিম চালু করা যায়নি।\nইন্টারনেট চেক করে আবার চেষ্টা করো।';
             _loading = false;
+            _vpnMayHelp = true;
           });
         });
   }
@@ -165,7 +172,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         const Positioned(
                           top: 10,
                           right: 10,
-                          child: LiveBadge(),
+                          child: SkyWatermark(),
                         ),
                     ],
                   ),
@@ -239,6 +246,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
               icon: const Icon(Icons.refresh_rounded),
               label: const Text('আবার চেষ্টা করো'),
             ),
+            if (_vpnMayHelp) ...[
+              const SizedBox(height: 8),
+              const _VpnErrorHint(),
+            ],
           ],
         ),
       );
@@ -332,6 +343,52 @@ class _PlayerScreenState extends State<PlayerScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Shown under the player error when the VPN helper is enabled, a VPN
+/// app is configured, and no VPN tunnel looks active — one tap opens
+/// the user's VPN app.
+class _VpnErrorHint extends StatelessWidget {
+  const _VpnErrorHint();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<dynamic>>(
+      future: Future.wait([
+        VpnHelper.isEnabled(),
+        VpnHelper.getPackage(),
+        VpnHelper.isVpnActive(),
+      ]),
+      builder: (context, snap) {
+        if (!snap.hasData) return const SizedBox.shrink();
+        final enabled = snap.data![0] as bool;
+        final pkg = snap.data![1] as String?;
+        final vpnOn = snap.data![2] as bool?;
+        if (!enabled || pkg == null || vpnOn != false) {
+          return const SizedBox.shrink();
+        }
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              '💡 VPN চালু করলে এই channel চলতে পারে',
+              style: TextStyle(color: Colors.white54, fontSize: 12),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: () => VpnHelper.openVpnApp(pkg),
+              icon: const Icon(Icons.vpn_lock_rounded, size: 18),
+              label: const Text('VPN App খোলো'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFFFFC53D),
+                side: const BorderSide(color: Color(0xFF8A6D1B)),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

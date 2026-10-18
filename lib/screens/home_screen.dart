@@ -8,6 +8,7 @@ import '../theme/category_style.dart';
 import '../widgets/channel_card.dart';
 import '../widgets/featured_carousel.dart';
 import '../widgets/parental_gate.dart';
+import '../widgets/vpn_banner.dart';
 import 'category_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -87,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(child: _header(store)),
+        const SliverToBoxAdapter(child: VpnBanner()),
         SliverToBoxAdapter(child: _categoryChips(store)),
         if (searching) ...[
           SliverToBoxAdapter(child: _searchMeta(store)),
