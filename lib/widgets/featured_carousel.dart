@@ -94,7 +94,7 @@ class _FeaturedCarouselState extends State<FeaturedCarousel> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: AppColors.surface,
-          border: Border.all(color: Colors.white.withValues(alpha: 20)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
@@ -111,7 +111,7 @@ class _FeaturedCarouselState extends State<FeaturedCarousel> {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.transparent, Colors.black.withValues(alpha: 224)],
+                  colors: [Colors.transparent, Colors.black.withValues(alpha: 0.88)],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -160,7 +160,7 @@ class _FeaturedCarouselState extends State<FeaturedCarousel> {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.sky.withValues(alpha: 102),
+                          color: AppColors.sky.withValues(alpha: 0.4),
                           blurRadius: 12,
                         ),
                       ],

@@ -37,7 +37,7 @@ ThemeData buildAppTheme() {
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: AppColors.navSurface,
-      indicatorColor: AppColors.sky.withValues(alpha: 41),
+      indicatorColor: AppColors.sky.withValues(alpha: 0.16),
       labelTextStyle: WidgetStateProperty.resolveWith((states) => TextStyle(
         color: states.contains(WidgetState.selected)
             ? AppColors.sky
