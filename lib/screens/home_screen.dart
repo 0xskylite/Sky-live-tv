@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('SKY LIVE TV',
+                    Text('SKY LIVE',
                         style: TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 19,

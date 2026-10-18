@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'store/channel_store.dart';
-import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -16,10 +16,10 @@ class SkyLiveTvApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => ChannelStore(),
       child: MaterialApp(
-        title: 'Sky Live TV',
+        title: 'Sky Live',
         debugShowCheckedModeBanner: false,
         theme: buildAppTheme(),
-        home: const HomeScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

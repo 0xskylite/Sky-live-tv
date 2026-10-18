@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Sky Live TV design system — premium dark streaming interface.
+/// Sky Live design system — premium dark streaming interface.
 class AppColors {
   static const bg = Color(0xFF080D18);
   static const surface = Color(0xFF111A2B);

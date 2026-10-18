@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: Build Sky Live TV
+    name: Build Sky Live
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -52,8 +52,10 @@ jobs:
             testWidgets('app launches and shows home header',
                 (WidgetTester tester) async {
               await tester.pumpWidget(const SkyLiveTvApp());
-              await tester.pump();
-              expect(find.text('SKY LIVE TV'), findsOneWidget);
+              // Splash animates ~2.3s before navigating to HomeScreen.
+              await tester.pump(const Duration(seconds: 3));
+              await tester.pump(const Duration(milliseconds: 600));
+              expect(find.text('SKY LIVE'), findsOneWidget);
             });
           }
           DART
@@ -73,6 +75,11 @@ jobs:
               text = re.sub(r'<application(\s)', r'<application android:usesCleartextTraffic="true"\1', text, count=1)
           else:
               text = re.sub(r'android:usesCleartextTraffic="[^"]*"', 'android:usesCleartextTraffic="true"', text, count=1)
+          # App display name under the launcher icon.
+          if 'android:label=' in text:
+              text = re.sub(r'android:label="[^"]*"', 'android:label="Sky Live"', text, count=1)
+          else:
+              text = re.sub(r'<application(\s)', r'<application android:label="Sky Live"\1', text, count=1)
           path.write_text(text, encoding='utf-8')
           PY
 

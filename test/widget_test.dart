@@ -12,7 +12,9 @@ void main() {
   testWidgets('app launches and shows home header',
       (WidgetTester tester) async {
     await tester.pumpWidget(const SkyLiveTvApp());
-    await tester.pump();
-    expect(find.text('SKY LIVE TV'), findsOneWidget);
+    // Splash animates ~2.3s before navigating to HomeScreen.
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.text('SKY LIVE'), findsOneWidget);
   });
 }
